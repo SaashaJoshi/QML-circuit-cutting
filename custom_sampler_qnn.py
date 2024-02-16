@@ -18,7 +18,8 @@ import numpy as np
 from numbers import Integral
 from qiskit import QuantumCircuit
 from qiskit.circuit import QuantumCircuit
-from qiskit.primitives import BaseSampler, SamplerResult, Sampler
+from qiskit.primitives import BaseSampler, SamplerResult
+from qiskit_aer.primitives import Sampler
 from qiskit_algorithms.gradients import (
     BaseSamplerGradient,
     ParamShiftSamplerGradient,
