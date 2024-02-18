@@ -50,7 +50,9 @@ class CustomNeuralNetwork(ABC):
     ) -> None:
 
         if num_inputs < 0:
-            raise QiskitMachineLearningError(f"Number of inputs cannot be negative: {num_inputs}!")
+            raise QiskitMachineLearningError(
+                f"Number of inputs cannot be negative: {num_inputs}!"
+            )
         self._num_inputs = num_inputs
 
         if num_weights < 0:
@@ -170,8 +172,10 @@ class CustomNeuralNetwork(ABC):
         self, output_data: np.ndarray, original_shape: tuple[int, ...]
     ) -> np.ndarray:
         if original_shape and len(original_shape) >= 3:
-            print("Here")
-            output_data = output_data[0].reshape((*original_shape[:-1], *self._output_shape))
+            # print("Here")
+            output_data = output_data[0].reshape(
+                (*original_shape[:-1], *self._output_shape)
+            )
 
         return output_data
 
@@ -205,7 +209,7 @@ class CustomNeuralNetwork(ABC):
         weights_ = self._validate_weights(weights)
         # output_data is a dict
         output_data = self._forward(input_, weights_)
-        print(self._validate_forward_output(output_data, shape))
+        # print(self._validate_forward_output(output_data, shape))
         return self._validate_forward_output(output_data, shape)
 
     @abstractmethod
@@ -275,13 +279,17 @@ class CustomNeuralNetwork(ABC):
         if input_params:
             for i, param in enumerate(input_params):
                 if param not in parameters:
-                    raise ValueError(f"Input param `{param.name}` not present in circuit")
+                    raise ValueError(
+                        f"Input param `{param.name}` not present in circuit"
+                    )
                 new_parameters[param] = new_input_params[i]
 
         if weight_params:
             for i, param in enumerate(weight_params):
                 if param not in parameters:
-                    raise ValueError(f"Weight param {param.name} `not present in circuit")
+                    raise ValueError(
+                        f"Weight param {param.name} `not present in circuit"
+                    )
                 new_parameters[param] = new_weight_params[i]
 
         if new_parameters:

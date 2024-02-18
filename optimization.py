@@ -1,30 +1,46 @@
+# This code is taken from part of a Qiskit project.
+#
+# (C) Copyright IBM 2022, 2024.
+# Modified by SaashaJoshi 2024.
+#
+# This code is licensed under the Apache License, Version 2.0. You may
+# obtain a copy of this license in the LICENSE.txt file in the root directory
+# of this source tree or at http://www.apache.org/licenses/LICENSE-2.0.
+#
+# Any modifications or derivative works of this code must retain this
+# copyright notice, and modified files need to carry a notice indicating
+# that they have been altered from the originals.
+
 from __future__ import annotations
 from typing import Callable
 import numpy as np
-from qiskit_machine_learning.algorithms import BinaryObjectiveFunction
+from qiskit_machine_learning.algorithms import MultiClassObjectiveFunction
 
 
 def create_objective(X: np.ndarray, y: np.ndarray, neural_network, loss):
-    return BinaryObjectiveFunction(X, y, neural_network, loss)
+    return MultiClassObjectiveFunction(X, y, neural_network, loss)
 
 
-def fit(X: np.ndarray, y: np.ndarray):
-    function = create_objective(X, y)
-    return minimizer(function)
+def minimizer(
+    function, func_objective, func_gradient, initial_point, optimizer: Callable
+):
+    # objective = function.objective
+    # optimizer_result = []
 
-
-def minimizer(function, initial_point, optimizer: Callable):
-    objective = function.objective
     if callable(optimizer):
         optimizer_result = optimizer(
-            fun=objective, x0=initial_point, jac=function.gradient,
+            fun=func_objective,
+            x0=initial_point,
+            jac=func_gradient,
         )
     else:
         optimizer_result = optimizer.minimize(
-            fun=objective,
+            fun=func_objective,
             x0=initial_point,
-            jac=function.gradient,
+            jac=func_gradient,
         )
+
+    print(optimizer_result)
     return optimizer_result
 
 
@@ -37,6 +53,10 @@ def print_optimizer_results(optimizer_result):
     print(f"The total number of iterations: {optimizer_result.nit}")
 
 
+# def fit(X: np.ndarray, y: np.ndarray):
+#      function = create_objective(X, y)
+#      return minimizer(function)
+
 # Objective function may not be required if using this gradient function.
 # def gradient(loss, weights, forward_output, weights_grad):
 #     loss_gradient = loss.gradient(forward_output, y_train.values.reshape(-1, 1))
@@ -48,5 +68,3 @@ def print_optimizer_results(optimizer_result):
 #     grad = grad.reshape(1, -1) / self._num_samples
 
 #     return grad
-
-

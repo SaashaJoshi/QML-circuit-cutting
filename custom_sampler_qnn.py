@@ -43,6 +43,7 @@ else:
 
         pass
 
+
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
@@ -58,17 +59,17 @@ logging.getLogger().addHandler(PrintHandler())
 
 class CustomSampler(CustomNeuralNetwork):
     def __init__(
-            self,
-            *,
-            circuits: tuple[QuantumCircuit],
-            sampler=None,
-            input_params=None,
-            weight_params=None,
-            sparse=None,
-            interpret=None,
-            output_shape=None,
-            gradient=None,
-            input_gradients=False,
+        self,
+        *,
+        circuits: tuple[QuantumCircuit],
+        sampler=None,
+        input_params=None,
+        weight_params=None,
+        sparse=None,
+        interpret=None,
+        output_shape=None,
+        gradient=None,
+        input_gradients=False,
     ):
         # set primitive, provide default
         if sampler is None:
@@ -129,7 +130,10 @@ class CustomSampler(CustomNeuralNetwork):
         #         circuit.measure_all()
 
         # check this
-        self._circuits = [self._reparameterize_circuit(circuit, input_params, weight_params) for circuit in circuits]
+        self._circuits = [
+            self._reparameterize_circuit(circuit, input_params, weight_params)
+            for circuit in circuits
+        ]
 
     @property
     def circuits(self):
@@ -149,10 +153,10 @@ class CustomSampler(CustomNeuralNetwork):
 
     # COMPLETED
     def set_interpret(
-            self,
-            interpret=None,
-            output_shape=None,
-            circuits=None,
+        self,
+        interpret=None,
+        output_shape=None,
+        circuits=None,
     ) -> None:
         # derive target values to be used in computations
         # self._output_shape = (
@@ -163,9 +167,9 @@ class CustomSampler(CustomNeuralNetwork):
         self._interpret = interpret if interpret is not None else lambda x: x
 
     def _compute_output_shape(
-            self,
-            interpret=None,
-            output_shape=None,
+        self,
+        interpret=None,
+        output_shape=None,
     ) -> tuple[int, ...]:
         """Validate and compute the output shape."""
 
@@ -189,10 +193,10 @@ class CustomSampler(CustomNeuralNetwork):
                     "No interpret function given, output_shape will be automatically "
                     "determined as 2^num_qubits."
                 )
-            output_shape_ = (2 ** self.subex_circuit.num_qubits,)
+            output_shape_ = (2**self.subex_circuit.num_qubits,)
 
         # (16, )
-        print(output_shape_)
+        # print(output_shape_)
 
         return output_shape_
 
@@ -230,9 +234,15 @@ class CustomSampler(CustomNeuralNetwork):
             # pylint: disable=import-error
             from sparse import DOK
 
-            prob = {num_sample: DOK((num_samples, *self._output_shape)) for num_sample in range(len(results))}
+            prob = {
+                num_sample: DOK((num_samples, *self._output_shape))
+                for num_sample in range(len(results))
+            }
         else:
-            prob = {num_sample: np.zeros((num_samples, *self._output_shape)) for num_sample in range(len(results))}
+            prob = {
+                num_sample: np.zeros((num_samples, *self._output_shape))
+                for num_sample in range(len(results))
+            }
 
         # probs = 6, (537, 16)
 
@@ -293,24 +303,35 @@ class CustomSampler(CustomNeuralNetwork):
             from sparse import DOK
 
             # shape = (537, 16, 4)
-            input_grad = {num_sample: (
-                DOK((num_samples, *self._output_shape, self._num_inputs))
-                if self._input_gradients
-                else None
-            ) for num_sample in range(len(results))}
+            input_grad = {
+                num_sample: (
+                    DOK((num_samples, *self._output_shape, self._num_inputs))
+                    if self._input_gradients
+                    else None
+                )
+                for num_sample in range(len(results))
+            }
             # shape = (537, 16, 7)
-            weights_grad = {num_sample: DOK((num_samples, *self._output_shape, self._num_weights))
-                            for num_sample in range(len(results))}
+            weights_grad = {
+                num_sample: DOK((num_samples, *self._output_shape, self._num_weights))
+                for num_sample in range(len(results))
+            }
         else:
 
-            input_grad = {num_sample: (
-                np.zeros((num_samples, *self._output_shape, self._num_inputs))
-                if self._input_gradients
-                else None
-            ) for num_sample in range(len(results))}
-            weights_grad = {num_sample: np.zeros(
-                (num_samples, *self._output_shape, self._num_weights)
-            ) for num_sample in range(len(results))}
+            input_grad = {
+                num_sample: (
+                    np.zeros((num_samples, *self._output_shape, self._num_inputs))
+                    if self._input_gradients
+                    else None
+                )
+                for num_sample in range(len(results))
+            }
+            weights_grad = {
+                num_sample: np.zeros(
+                    (num_samples, *self._output_shape, self._num_weights)
+                )
+                for num_sample in range(len(results))
+            }
 
         # num_param_gradients = num of parameters per circuit
         # For example, 7 for sub_circuit["A"]
@@ -325,8 +346,13 @@ class CustomSampler(CustomNeuralNetwork):
         # 6 keys, 537 gradient sample lists (list_of_list_of_grads) per keys, 7 gradient dicts per sample
         # print(len(dict_of_list_of_list_of_gradients))
 
-        for i_num_subex, list_of_list_of_grads in dict_of_list_of_list_of_gradients.items():
-            for i_num_sample, list_of_grads in enumerate(list_of_list_of_grads[:num_param_gradients]):
+        for (
+            i_num_subex,
+            list_of_list_of_grads,
+        ) in dict_of_list_of_list_of_gradients.items():
+            for i_num_sample, list_of_grads in enumerate(
+                list_of_list_of_grads[:num_param_gradients]
+            ):
                 for i_num_param, grads in enumerate(list_of_grads):
                     # 537, 11, 2
                     # print(len(list_of_list_of_grads), len(list_of_grads), len(grads))
@@ -349,7 +375,11 @@ class CustomSampler(CustomNeuralNetwork):
                         # print(key)
                         if isinstance(key, Integral):
                             # shape =
-                            key = (i_num_sample, int(key), grad_index,)
+                            key = (
+                                i_num_sample,
+                                int(key),
+                                grad_index,
+                            )
                         else:
                             # if key is an array-type, cast to hashable tuple
                             key = tuple(cast(Iterable[int], key))
@@ -371,7 +401,7 @@ class CustomSampler(CustomNeuralNetwork):
                 input_grad = input_grad.to_coo()  # pylint: disable=no-member
             weights_grad = weights_grad.to_coo()
 
-        print(len(weights_grad))
+        # print(len(weights_grad))
 
         return input_grad, weights_grad
 
@@ -404,9 +434,9 @@ class CustomSampler(CustomNeuralNetwork):
         return result
 
     def _backward(
-            self,
-            input_data,
-            weights,
+        self,
+        input_data,
+        weights,
     ):
         """Backward pass of the network."""
         # print("Backward called by some function.")
@@ -425,12 +455,10 @@ class CustomSampler(CustomNeuralNetwork):
                 }
             elif len(parameter_values[0]) > self._num_inputs:
                 params = [
-                             self.subex_circuit.parameters[self._num_inputs:]
-                         ] * num_samples
+                    self.subex_circuit.parameters[self._num_inputs :]
+                ] * num_samples
                 jobs = {
-                    index: self.gradient.run(
-                        [circuit] * num_samples, parameter_values
-                    )
+                    index: self.gradient.run([circuit] * num_samples, parameter_values)
                     for index, circuit in enumerate(self._circuits)
                 }
                 # jobs = {
