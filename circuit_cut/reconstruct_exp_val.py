@@ -26,7 +26,9 @@ def get_reconstructed_expvals(A_dict, B_dict, coefficients, sub_observables):
         # print(combine_dict["A"].quasi_dists)
         # print(v1.quasi_dists)
         reconstructed_expvals.append(
-            reconstruct_expectation_values(combine_dict, coefficients, sub_observables)[0]
+            reconstruct_expectation_values(combine_dict, coefficients, sub_observables)[
+                0
+            ]
         )
 
     return reconstructed_expvals
@@ -36,7 +38,9 @@ def get_subcircuit_results(x_test, final_circuits, optimizer_results):
     sampler = Sampler()
     test_results = copy.deepcopy(generate_empty_dict(len(x_test.values)))
     for num_sample, x_val in enumerate(x_test.values):
-        for num_subex, (subex, result) in enumerate(zip(final_circuits, optimizer_results)):
+        for num_subex, (subex, result) in enumerate(
+            zip(final_circuits, optimizer_results)
+        ):
             param = np.append(x_val, result)
             # param = np.append(x_val, result.x)    Use this. Keeping above temporarily to avoid retraining.
             circ = subex.assign_parameters(param, inplace=False)
@@ -51,14 +55,17 @@ def get_dict_sampler_results(x_test, subexperiments, test_results):
 
     for num_samples in range(len(x_test.values)):
         for num_subex in range(len(subexperiments)):
-            dists_dict[num_samples].append(*test_results[num_samples][num_subex].quasi_dists)
-            metadata_dict[num_samples].append(*test_results[num_samples][num_subex].metadata)
+            dists_dict[num_samples].append(
+                *test_results[num_samples][num_subex].quasi_dists
+            )
+            metadata_dict[num_samples].append(
+                *test_results[num_samples][num_subex].metadata
+            )
 
     dict_sampler_results = copy.deepcopy(generate_empty_dict(len(x_test.values)))
     for num_samples, _ in enumerate(x_test.values):
         dict_sampler_results[num_samples] = SamplerResult(
-            quasi_dists=dists_dict[num_samples],
-            metadata=metadata_dict[num_samples]
+            quasi_dists=dists_dict[num_samples], metadata=metadata_dict[num_samples]
         )
 
     return dict_sampler_results
