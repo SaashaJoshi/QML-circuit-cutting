@@ -44,8 +44,8 @@ else:
         pass
 
 
-logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO)
+# logger = logging.getLogger(__name__)
+# logging.basicConfig(level=logging.INFO)
 
 
 class PrintHandler(logging.Handler):
@@ -54,7 +54,7 @@ class PrintHandler(logging.Handler):
 
 
 # Attach the custom handler to the root logger
-logging.getLogger().addHandler(PrintHandler())
+# logging.getLogger().addHandler(PrintHandler())
 
 
 class CustomSampler(CustomNeuralNetwork):

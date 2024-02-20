@@ -207,6 +207,7 @@ class CustomNeuralNetwork(ABC):
     ) -> np.ndarray | SparseArray:
         input_, shape = self._validate_input(input_data)
         weights_ = self._validate_weights(weights)
+        # print(len(weights_), self._num_weights)
         # output_data is a dict
         output_data = self._forward(input_, weights_)
         # print(self._validate_forward_output(output_data, shape))

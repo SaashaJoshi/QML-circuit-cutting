@@ -2,6 +2,7 @@ import copy
 import numpy as np
 from qiskit_aer.primitives import Sampler
 from qiskit.primitives import SamplerResult
+from circuit_knitting.cutting import reconstruct_expectation_values
 
 
 def generate_empty_dict(num):
@@ -11,8 +12,24 @@ def generate_empty_dict(num):
     return empty_dict
 
 
-def custom_reconstruct():
-    pass
+def get_reconstructed_expvals(A_dict, B_dict, coefficients, sub_observables):
+    zip_dict = zip(A_dict.items(), B_dict.items())
+    reconstructed_expvals = []
+
+    for (num_subex1, v1), (num_subex2, v2) in zip_dict:
+        # print((num_subex1, v1), (num_subex2, v2))
+        # combine_dict = {"A": None, "B": None}
+        # combine_dict["A"] = v1
+        # combine_dict["B"] = v2
+        combine_dict = {"A": v1, "B": v2}
+        # print(len(combine_dict["A"].quasi_dists))
+        # print(combine_dict["A"].quasi_dists)
+        # print(v1.quasi_dists)
+        reconstructed_expvals.append(
+            reconstruct_expectation_values(combine_dict, coefficients, sub_observables)[0]
+        )
+
+    return reconstructed_expvals
 
 
 def get_subcircuit_results(x_test, final_circuits, optimizer_results):
@@ -20,7 +37,8 @@ def get_subcircuit_results(x_test, final_circuits, optimizer_results):
     test_results = copy.deepcopy(generate_empty_dict(len(x_test.values)))
     for num_sample, x_val in enumerate(x_test.values):
         for num_subex, (subex, result) in enumerate(zip(final_circuits, optimizer_results)):
-            param = np.append(x_val, result.x)
+            param = np.append(x_val, result)
+            # param = np.append(x_val, result.x)    Use this. Keeping above temporarily to avoid retraining.
             circ = subex.assign_parameters(param, inplace=False)
             test_results[num_sample].append(sampler.run(circ).result())
 
@@ -37,20 +55,10 @@ def get_dict_sampler_results(x_test, subexperiments, test_results):
             metadata_dict[num_samples].append(*test_results[num_samples][num_subex].metadata)
 
     dict_sampler_results = copy.deepcopy(generate_empty_dict(len(x_test.values)))
-    for index, _ in enumerate(subexperiments):
-        dict_sampler_results[index] = [SamplerResult(quasi_dists=dists_dict[index], metadata=metadata_dict[index])]
+    for num_samples, _ in enumerate(x_test.values):
+        dict_sampler_results[num_samples] = SamplerResult(
+            quasi_dists=dists_dict[num_samples],
+            metadata=metadata_dict[num_samples]
+        )
 
     return dict_sampler_results
-
-
-def get_combined_dict(A_dict, B_dict):
-    combine_dict = {"A": None, "B": None}
-    zip_dict = zip(A_dict.items(), B_dict.items())
-
-    for (num_subex1, v1), (num_subex2, v2) in zip_dict:
-        # print((num_subex1, v1), (num_subex2, v2))
-        # combine_dict = {"A": None, "B": None}
-        combine_dict["A"] = v1
-        combine_dict["B"] = v2
-
-    return combine_dict
