@@ -38,11 +38,9 @@ def get_subcircuit_results(x_test, final_circuits, optimizer_results):
     sampler = Sampler()
     test_results = copy.deepcopy(generate_empty_dict(len(x_test.values)))
     for num_sample, x_val in enumerate(x_test.values):
-        for num_subex, (subex, result) in enumerate(
-            zip(final_circuits, optimizer_results)
-        ):
-            param = np.append(x_val, result)
-            # param = np.append(x_val, result.x)    Use this. Keeping above temporarily to avoid retraining.
+        for num_subex, (subex, result) in enumerate(zip(final_circuits, optimizer_results)):
+            # param = np.append(x_val, result)
+            param = np.append(x_val, result.x)    # Use this. Keeping above temporarily to avoid retraining.
             circ = subex.assign_parameters(param, inplace=False)
             test_results[num_sample].append(sampler.run(circ).result())
 
