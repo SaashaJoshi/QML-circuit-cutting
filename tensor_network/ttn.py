@@ -13,8 +13,8 @@ from __future__ import annotations
 from typing import Callable
 import numpy as np
 from qiskit.circuit import QuantumCircuit, ParameterVector
-from two_qubit_unitary import TwoQubitUnitary
-from base_tensor_network import BaseTensorNetwork
+from tensor_network.two_qubit_unitary import TwoQubitUnitary
+from tensor_network.base_tensor_network import BaseTensorNetwork
 
 
 class TTN(BaseTensorNetwork):
