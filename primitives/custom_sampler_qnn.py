@@ -29,7 +29,7 @@ from qiskit_machine_learning.neural_networks import NeuralNetwork
 from qiskit_machine_learning.circuit.library import QNNCircuit
 from qiskit_machine_learning.exceptions import QiskitMachineLearningError
 import qiskit_machine_learning.optionals as _optionals
-from custom_neural_network import CustomNeuralNetwork
+from primitives.custom_neural_network import CustomNeuralNetwork
 
 if _optionals.HAS_SPARSE:
     # pylint: disable=import-error

@@ -12,7 +12,7 @@
 from __future__ import annotations
 import numpy as np
 from qiskit.circuit import QuantumCircuit, ParameterVector, Parameter
-from unitary_block import UnitaryBlock
+from tensor_network.unitary_block import UnitaryBlock
 
 
 class TwoQubitUnitary(UnitaryBlock):

@@ -166,6 +166,7 @@ class CustomNeuralNetwork(ABC):
         if weights is None:
             return None
         weights_ = np.array(weights)
+        # print(weights_.shape)
         return weights_.reshape(self._num_weights)
 
     def _validate_forward_output(

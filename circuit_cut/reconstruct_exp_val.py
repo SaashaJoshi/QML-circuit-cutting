@@ -34,8 +34,9 @@ def get_reconstructed_expvals(A_dict, B_dict, coefficients, sub_observables):
     return reconstructed_expvals
 
 
-def get_subcircuit_results(x_test, final_circuits, optimizer_results):
-    sampler = Sampler()
+def get_subcircuit_results(x_test, final_circuits, optimizer_results, sampler):
+    if sampler is None:
+        sampler = Sampler()
     test_results = copy.deepcopy(generate_empty_dict(len(x_test.values)))
     for num_sample, x_val in enumerate(x_test.values):
         for num_subex, (subex, result) in enumerate(zip(final_circuits, optimizer_results)):
