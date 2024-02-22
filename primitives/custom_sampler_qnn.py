@@ -25,6 +25,7 @@ from qiskit_algorithms.gradients import (
     ParamShiftSamplerGradient,
     SamplerGradientResult,
 )
+import time
 from qiskit_machine_learning.neural_networks import NeuralNetwork
 from qiskit_machine_learning.circuit.library import QNNCircuit
 from qiskit_machine_learning.exceptions import QiskitMachineLearningError
@@ -44,7 +45,7 @@ else:
         pass
 
 
-# logger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 # logging.basicConfig(level=logging.INFO)
 
 
@@ -409,6 +410,8 @@ class CustomSampler(CustomNeuralNetwork):
     def _forward(self, input_data, weights):
         # print("Forward called by some function.")
         logging.info("Forward is being called.")
+        start_time = time.time()
+
         parameter_values, num_samples = self._preprocess_forward(input_data, weights)
 
         # sampler allows batching (Here, batching subexperiments and num_samples)
@@ -431,6 +434,12 @@ class CustomSampler(CustomNeuralNetwork):
         # 6, (537, 16)
         # print(len(result), result[0].shape)
         # return result, results
+
+        end_time = time.time()
+        running_time = end_time - start_time
+        print("Running Time for Forward Pass: %s seconds", running_time)
+        logger.info("Running Time for Forward Pass: %s seconds", running_time)
+
         return result
 
     def _backward(
@@ -441,6 +450,7 @@ class CustomSampler(CustomNeuralNetwork):
         """Backward pass of the network."""
         # print("Backward called by some function.")
         logging.info("Backward is being called.")
+        start_time = time.time()
         # prepare parameters in the required format
         parameter_values, num_samples = self._preprocess_forward(input_data, weights)
 
@@ -479,4 +489,10 @@ class CustomSampler(CustomNeuralNetwork):
                 )
 
         # return input_grad, weights_grad, results
+
+        end_time = time.time()
+        running_time = end_time - start_time
+        print("Running Time for Backward Pass: %s seconds", running_time)
+        logger.info("Running Time for Backward Pass: %s seconds", running_time)
+
         return input_grad, weights_grad

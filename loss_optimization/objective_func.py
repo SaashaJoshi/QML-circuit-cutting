@@ -52,10 +52,10 @@ class CustomMultiClassObjectiveFunction(ObjectiveFunction):
             # print("shape", np.dot(probs[0][:, i], self._loss(np.full(num_samples, i), self._y)[0][0]).shape)
 
             # val += probs[0][:, i] @ self._loss(np.full(num_samples, i), self._y)[0][0]
-            # val += np.mean(np.dot(probs[0][:, i], self._loss(np.full(num_samples, i), self._y)[0][0]))
+            val += np.mean(np.dot(probs[0][:, i], self._loss(np.full(num_samples, i), self._y)[0][0]))
             # val += np.sum(probs[0][:, i] * self._loss(np.full(num_samples, i), self._y))
 
-            val += np.mean(np.dot(probs[0][:, i], self._loss(np.full(num_samples, i), self._y)))
+            # val += np.mean(np.dot(probs[0][:, i], self._loss(np.full(num_samples, i), self._y)))
 
             # val_list[num_subcirc] = val / self._num_samples
         val = val / self._num_samples
@@ -75,10 +75,10 @@ class CustomMultiClassObjectiveFunction(ObjectiveFunction):
 
         # for num_subcirc in range(len(probs)):
         for i in range(num_outputs):
-            # val += np.mean(np.dot(probs[1][:, i], self._loss(np.full(num_samples, i), self._y)[0][0]))
+            val += np.mean(np.dot(probs[1][:, i], self._loss(np.full(num_samples, i), self._y)[0][0]))
             # val += probs[1][:, i] @ self._loss(np.full(num_samples, i), self._y)
 
-            val += np.mean(np.dot(probs[1][:, i], self._loss(np.full(num_samples, i), self._y)))
+            # val += np.mean(np.dot(probs[1][:, i], self._loss(np.full(num_samples, i), self._y)))
         val = val / self._num_samples
 
         return val
@@ -94,10 +94,10 @@ class CustomMultiClassObjectiveFunction(ObjectiveFunction):
 
         # for num_subcirc in range(len(probs)):
         for i in range(num_outputs):
-            # val += np.mean(np.dot(probs[2][:, i], self._loss(np.full(num_samples, i), self._y)[0][0]))
+            val += np.mean(np.dot(probs[2][:, i], self._loss(np.full(num_samples, i), self._y)[0][0]))
             # val += probs[2][:, i] @ self._loss(np.full(num_samples, i), self._y)
 
-            val += np.mean(np.dot(probs[2][:, i], self._loss(np.full(num_samples, i), self._y)))
+            # val += np.mean(np.dot(probs[2][:, i], self._loss(np.full(num_samples, i), self._y)))
         val = val / self._num_samples
 
         return val
@@ -114,12 +114,12 @@ class CustomMultiClassObjectiveFunction(ObjectiveFunction):
         # for num_subcirc in range(len(probs)):
         for i in range(num_outputs):
             # For cross entropy
-            # val += np.mean(np.dot(probs[3][:, i], self._loss(np.full(num_samples, i), self._y)[0][0]))
+            val += np.mean(np.dot(probs[3][:, i], self._loss(np.full(num_samples, i), self._y)[0][0]))
             # val += np.sum(probs[0][:, i] * self._loss(np.full(num_samples, i), self._y))
 
             # for rest of the losses.
             # val += probs[3][:, i] @ self._loss(np.full(num_samples, i), self._y)
-            val += np.mean(np.dot(probs[3][:, i], self._loss(np.full(num_samples, i), self._y)))
+            # val += np.mean(np.dot(probs[3][:, i], self._loss(np.full(num_samples, i), self._y)))
         val = val / self._num_samples
 
         return val
@@ -135,10 +135,10 @@ class CustomMultiClassObjectiveFunction(ObjectiveFunction):
 
         # for num_subcirc in range(len(probs)):
         for i in range(num_outputs):
-            # val += np.mean(np.dot(probs[4][:, i], self._loss(np.full(num_samples, i), self._y)[0][0]))
+            val += np.mean(np.dot(probs[4][:, i], self._loss(np.full(num_samples, i), self._y)[0][0]))
             # val += probs[4][:, i] @ self._loss(np.full(num_samples, i), self._y)
 
-            val += np.mean(np.dot(probs[4][:, i], self._loss(np.full(num_samples, i), self._y)))
+            # val += np.mean(np.dot(probs[4][:, i], self._loss(np.full(num_samples, i), self._y)))
         val = val / self._num_samples
 
         return val
@@ -154,10 +154,10 @@ class CustomMultiClassObjectiveFunction(ObjectiveFunction):
 
         # for num_subcirc in range(len(probs)):
         for i in range(num_outputs):
-            # val += np.mean(np.dot(probs[5][:, i], self._loss(np.full(num_samples, i), self._y)[0][0]))
+            val += np.mean(np.dot(probs[5][:, i], self._loss(np.full(num_samples, i), self._y)[0][0]))
             # val += probs[5][:, i] @ self._loss(np.full(num_samples, i), self._y)
 
-            val += np.mean(np.dot(probs[5][:, i], self._loss(np.full(num_samples, i), self._y)))
+            # val += np.mean(np.dot(probs[5][:, i], self._loss(np.full(num_samples, i), self._y)))
         val = val / self._num_samples
 
         return val
