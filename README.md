@@ -4,15 +4,45 @@ Quantum Machine Learning (QML) techniques, including variational Quantum Tensor 
 
 ## Workflow
 
-The training of QML models integrated with circuit cutting can be performed using two possible workflows. 
+The training of QML models integrated with circuit cutting can be performed using two possible workflows.
 
-Workflow A, after performing the circuit cut, trains the sub-circuits with respect to the original train labels. This training happens before the results are combined to reconstruct the expectation value of the original circuit. This procedure helps to maintain a parallel workflow where the sub-circuits can be trained simultaneously. This simultaneous training, over multiple iterations, can be performed with the help of existing Batching techniques in the Qiskit Runtime primitives [^3]. The quasi-probability distributions received at the end of the training and evaluation process are combined to retrieve the expectation values of the original circuit. 
+In workflow A, sub-circuits generated after a circuit cutting undergo training using a subset of input data features. Evaluation is subsequently performed with respect to the original training labels. Following this, the circuits undergo a tuning stage, wherein variable parameters are updated based on the loss function computed in the evaluation stage. Upon obtaining optimal parameter values from the optimizer, the quasi-probability distributions derived from the sub-circuits are combined to reconstruct the expectation value of the original circuit.
+
+This workflow facilitates an independent and parallel evaluation of sub-circuits over multiple iterations. The concurrent training can be performed with the help of existing Batching techniques in the Qiskit Runtime primitives [^3]. 
 
 <img src="https://github.com/SaashaJoshi/Cut-QTN/blob/main/graphics/Workflow-A.png" alt="Training Workflow for QML model with Circuit Cutting">
 
-Workflow B, also proposed in [^6], reconstructs the original expectation value after every training iteration. The optimization procedure is performed on the reconstructed expectation value that triggers the model tuning loop. This workflow facilitates simultaneous training over one training iteration at a time. After every training result is received, the sub-circuits go through the classical post-processing steps to reconstruct the original expectation value.
+Workflow B, also proposed in [^6], involves training the sub-circuits to reconstruct the original expectation values after each training iteration. This is unlike Workflow A, where the reconstruction stage occurs after multiple iterations are performed on each sub-circuit. Subsequently, an optimization step is performed on the reconstructed expectation value to tune the variable parameters within the sub-circuits. The updated parameters are then utilized to finalize the training process. The ultimately reconstructed expectation value is further used for validation and testing purposes.
+
+This workflow facilitates concurrent training over one training iteration at a time. This is unlike Workflow A that allows for the parallel execution of sub-circuits over multiple iterations. Following the completion of each training iteration, the sub-circuits undergo classical post-processing steps to reconstruct the original expectation value.
 
 <img src="https://github.com/SaashaJoshi/Cut-QTN/blob/main/graphics/Workflow-B.png" alt="Training Workflow for QML model with Circuit Cutting">
+
+For this project, we have opted to adopt the Workflow A structure. This design decision aligns with considerations related to the constraints imposed by the current Qiskit stack, which currently lacks support for training sub-circuits using the existing SamplerQNN primitive. Additionally, this decision is influenced by the time limitations inherent in the project timeline.
+
+## Evaluation and Results
+
+<img src="https://github.com/SaashaJoshi/QML-circuit-cutting/blob/main/graphics/all_forward_time.png" alt="Time Taken to Run One Forward Pass on Different Backends.">
+
+
+<img src="https://github.com/SaashaJoshi/QML-circuit-cutting/blob/main/graphics/all_backward_time.png" alt="Time Taken to Run One Backward Pass on Different Backends.">
+
+
+<img src="https://github.com/SaashaJoshi/QML-circuit-cutting/blob/main/graphics/final_results_table.png" alt="Results from Training an 8-qubit QML Model with 1 Circuit Cut on CPU and GPU">
+
+
+<div class="image-container">
+<img src="https://github.com/SaashaJoshi/QML-circuit-cutting/blob/main/graphics/50-iter-cpu/sub-A.png" alt="Training Loss in 4-qubit sub-circuits (A) on a CPU (50 iterations)">
+<img src="https://github.com/SaashaJoshi/QML-circuit-cutting/blob/main/graphics/50-iter-cpu/sub-B.png" alt="Training Loss in 4-qubit sub-circuits (B) on a CPU (50 iterations)">
+</div>
+
+
+<div class="image-container">
+<img src="https://github.com/SaashaJoshi/QML-circuit-cutting/blob/main/graphics/50-iter-gpu/sub-A.png" alt="Training Loss in 4-qubit sub-circuits (A) on a GPU (50 iterations)">
+<img src="https://github.com/SaashaJoshi/QML-circuit-cutting/blob/main/graphics/50-iter-gpu/sub-B.png" alt="Training Loss in 4-qubit sub-circuits (B) on a GPU (50 iterations)">
+</div>
+
+<img src="https://github.com/SaashaJoshi/QML-circuit-cutting/blob/main/graphics/CC_time_to_train.png" alt="Time to Train the QML Model with Circuit Cutting on CPU and GPU">
 
 
 
