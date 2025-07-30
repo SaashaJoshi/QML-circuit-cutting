@@ -21,16 +21,16 @@ This workflow facilitates concurrent training over one training iteration at a t
 For this project, we have opted to adopt the Workflow A structure. This design decision aligns with considerations related to the constraints imposed by the current Qiskit stack, which currently lacks support for training sub-circuits using the existing SamplerQNN primitive. Additionally, this decision is influenced by the time limitations inherent in the project timeline.
 
 ## Evaluation and Results
-
+<!--
 <img src="https://github.com/SaashaJoshi/QML-circuit-cutting/blob/main/graphics/all_forward_time.png" alt="Time Taken to Run One Forward Pass on Different Backends.">
 
 
 <img src="https://github.com/SaashaJoshi/QML-circuit-cutting/blob/main/graphics/all_backward_time.png" alt="Time Taken to Run One Backward Pass on Different Backends.">
-
+-->
 
 <img src="https://github.com/SaashaJoshi/QML-circuit-cutting/blob/main/graphics/final_results_table.png" alt="Results from Training an 8-qubit QML Model with 1 Circuit Cut on CPU and GPU">
 
-
+<!--
 <div class="image-container">
 <img src="https://github.com/SaashaJoshi/QML-circuit-cutting/blob/main/graphics/50-iter-cpu/sub-A.png" alt="Training Loss in 4-qubit sub-circuits (A) on a CPU (50 iterations)">
 <img src="https://github.com/SaashaJoshi/QML-circuit-cutting/blob/main/graphics/50-iter-cpu/sub-B.png" alt="Training Loss in 4-qubit sub-circuits (B) on a CPU (50 iterations)">
@@ -43,7 +43,7 @@ For this project, we have opted to adopt the Workflow A structure. This design d
 </div>
 
 <img src="https://github.com/SaashaJoshi/QML-circuit-cutting/blob/main/graphics/CC_time_to_train.png" alt="Time to Train the QML Model with Circuit Cutting on CPU and GPU">
-
+-->
 
 
 [^1]: D. Guala, S. Zhang, E. Cruz, C. A. Riofrío, J. Klepsch, and J. M. Arrazola, “Practical overview of image classification with tensor-network quantum circuits,” Scientific Reports, vol. 13, no. 1, p. 4427, Mar. 2023, doi: https://doi.org/10.1038/s41598-023-30258-y.
